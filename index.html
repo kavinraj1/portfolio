@@ -125,6 +125,12 @@
             transform: scale(1.4); 
         }
 
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
         .btn {
             display: inline-block;
             padding: 0.8rem 1.5rem;
@@ -133,7 +139,6 @@
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
-            margin-top: 1.5rem;
             transition: all 0.3s ease;
             border: 1px solid rgba(251, 250, 244, 0.1);
             box-shadow: 0 4px 15px rgba(32, 128, 141, 0.3);
@@ -143,6 +148,19 @@
             background-color: var(--accent-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(32, 128, 141, 0.4);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(32, 128, 141, 0.1);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(32, 128, 141, 0.2);
         }
 
         .grid-container {
@@ -168,10 +186,10 @@
             background-color: rgba(251, 250, 244, 0.06);
         }
 
-        /* PLACEHOLDER: Project Images */
+        /* Project Images */
         .card-img {
             width: 100%;
-            height: 200px;
+            height: 250px;
             background-color: rgba(9, 23, 23, 0.8); /* Fallback color */
             object-fit: cover;
             border-bottom: 1px solid var(--glass-border);
@@ -264,7 +282,10 @@
             <p style="color: var(--text-secondary);">
                 Currently pursuing my M.S. at Johns Hopkins University, with a strong foundation in deep learning pipelines, clinical diagnostics, and biomedical data analysis. I build robust algorithms and functional prototypes to solve complex medical and defense challenges.
             </p>
-            <a href="mailto:kavinrajsr2004@gmail.com" class="btn">Get in Touch</a>
+            <div class="contact-buttons">
+                <a href="mailto:kavinrajsr2004@gmail.com" class="btn">Email Me</a>
+                <a href="https://linkedin.com/in/YOUR_LINKEDIN_PROFILE" target="_blank" class="btn btn-outline">LinkedIn</a>
+            </div>
         </div>
         <div class="hero-image">
             <div class="profile-pic-wrapper">
@@ -315,10 +336,13 @@
         <div class="grid-container">
             
             <div class="card">
-                <img src="REPLACE_WITH_YOUR_IRIS_IMAGE.jpg" alt="IRIS Diagnostic Cassette" class="card-img">
+                <div id="stl-viewer" class="card-img" style="cursor: grab; display: flex; align-items: center; justify-content: center;">
+                    <span id="loading-text" style="color: var(--text-secondary); font-size: 0.9rem;">Loading 3D Model...</span>
+                </div>
                 <div class="card-content">
                     <h3 class="card-title">IRIS Diagnostic Cassette</h3>
                     <p style="font-size: 0.9rem; color: var(--text-secondary);">A dual-lane lateral flow assay cassette designed for NATO deployed forces to simultaneously detect tropical (Malaria, Dengue) and respiratory pathogens from a single encounter.</p>
+                    <p style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.5rem; font-style: italic;">Interact with the 3D model above! ↻</p>
                     <div class="tag-container">
                         <span class="tag">3D Modeling</span>
                         <span class="tag">Prototyping</span>
@@ -332,6 +356,7 @@
                 <div class="card-content">
                     <h3 class="card-title">Brain Tumor Detection (ICBDT 2024)</h3>
                     <p style="font-size: 0.9rem; color: var(--text-secondary);">Published research detailing an automated MRI-based pipeline. Built and optimized CNN architectures and utilized transfer learning, achieving 98% test accuracy on 1,300+ scans.</p>
+                    <a href="https://doi.org/10.1007/978-3-031-83911-5_51" target="_blank" style="color: var(--accent-color); text-decoration: none; font-size: 0.95rem; display: inline-block; margin-top: 0.5rem; font-weight: 500;">Read Publication ↗</a>
                     <div class="tag-container">
                         <span class="tag">PyTorch</span>
                         <span class="tag">CNNs</span>
@@ -364,6 +389,9 @@
         <p style="color: var(--text-secondary);">© 2026 Kavinraj Srirangarayan Rangaraj. All rights reserved.</p>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script>
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -374,6 +402,81 @@
                 });
             });
         });
+
+        // 3D Model Viewer Logic
+        window.onload = function() {
+            const container = document.getElementById('stl-viewer');
+            const scene = new THREE.Scene();
+            
+            // Set camera and renderer
+            const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            // Add orbital controls (spin and zoom)
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.autoRotate = true; 
+            controls.autoRotateSpeed = 2.0;
+            controls.enableZoom = false; // Disable scroll zoom so users don't get stuck scrolling down the page
+
+            // Lighting setup to highlight the model and match turquoise theme
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 2).normalize();
+            scene.add(directionalLight);
+            const backLight = new THREE.DirectionalLight(0x20808D, 1); 
+            backLight.position.set(-1, -1, -1).normalize();
+            scene.add(backLight);
+
+            // Load STL File
+            const loader = new THREE.STLLoader();
+            // IMPORTANT: %20 is used to represent the space in your file name
+            loader.load('dual-well-lfa-true%20through.stl', function (geometry) {
+                document.getElementById('loading-text').style.display = 'none';
+
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: 0xFBFAF4, // Paper White
+                    metalness: 0.3, 
+                    roughness: 0.4 
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                // Center the geometry
+                geometry.computeBoundingBox();
+                const center = geometry.boundingBox.getCenter(new THREE.Vector3());
+                mesh.position.sub(center);
+                
+                // Scale camera to fit model
+                const box = geometry.boundingBox;
+                const size = box.getSize(new THREE.Vector3()).length();
+                camera.position.z = size * 1.5;
+
+                const wrapper = new THREE.Group();
+                wrapper.add(mesh);
+                scene.add(wrapper);
+            }, undefined, function (error) {
+                console.error(error);
+                document.getElementById('loading-text').innerText = 'Error loading 3D model.';
+            });
+
+            // Animation Loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        };
     </script>
 </body>
 </html>
