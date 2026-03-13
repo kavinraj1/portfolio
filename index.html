@@ -7,11 +7,11 @@
     <style>
         :root {
             /* Perplexity Brand Colors */
-            --bg-color: #091717; /* Offblack */
-            --text-primary: #FBFAF4; /* Paper White */
+            --bg-color: #091717; 
+            --text-primary: #FBFAF4; 
             --text-secondary: rgba(251, 250, 244, 0.7);
-            --accent-color: #20808D; /* True Turquoise */
-            --accent-hover: #2ab1c2; /* Lighter Turquoise */
+            --accent-color: #20808D; 
+            --accent-hover: #2ab1c2; 
             
             /* Liquid Glass Variables */
             --glass-bg: rgba(251, 250, 244, 0.04); 
@@ -30,7 +30,6 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.6;
-            /* Subtle ambient background glow to make the glass effect pop */
             background-image: 
                 radial-gradient(circle at 15% 50%, rgba(32, 128, 141, 0.08), transparent 25%),
                 radial-gradient(circle at 85% 30%, rgba(32, 128, 141, 0.05), transparent 25%);
@@ -42,7 +41,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            /* Liquid Glass Header */
             background-color: rgba(9, 23, 23, 0.65);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -103,7 +101,6 @@
             justify-content: center;
         }
 
-        /* Profile Picture Zoom Wrapper with Liquid Glass styling */
         .profile-pic-wrapper {
             width: 320px;
             height: 320px;
@@ -111,12 +108,10 @@
             border: 1px solid rgba(251, 250, 244, 0.15);
             box-shadow: 0 0 40px rgba(32, 128, 141, 0.2);
             overflow: hidden; 
-            /* Inner glass effect behind the image if it has transparency */
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
         }
 
-        /* Image is zoomed in and positioned on the face */
         .profile-pic-wrapper img {
             width: 100%;
             height: 100%;
@@ -169,7 +164,6 @@
             gap: 2rem;
         }
 
-        /* Liquid Glass Cards */
         .card {
             background-color: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -186,11 +180,10 @@
             background-color: rgba(251, 250, 244, 0.06);
         }
 
-        /* Project Images */
         .card-img {
             width: 100%;
             height: 250px;
-            background-color: rgba(9, 23, 23, 0.8); /* Fallback color */
+            background-color: rgba(9, 23, 23, 0.8); 
             object-fit: cover;
             border-bottom: 1px solid var(--glass-border);
         }
@@ -221,7 +214,6 @@
             border: 1px solid rgba(32, 128, 141, 0.3);
         }
 
-        /* Liquid Glass Experience Items */
         .experience-item {
             margin-bottom: 2rem;
             background-color: var(--glass-bg);
@@ -257,6 +249,50 @@
             .hero-header {
                 flex-direction: column;
             }
+        }
+
+        /* 3D Viewer UI Overlay Styles */
+        .viewer-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .model-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            background: rgba(9, 23, 23, 0.6);
+            padding: 4px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(32, 128, 141, 0.3);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .model-switch-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: rgba(32, 128, 141, 0.8);
+            color: var(--text-primary);
+            border: 1px solid rgba(251, 250, 244, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .model-switch-btn:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -336,13 +372,13 @@
         <div class="grid-container">
             
             <div class="card">
-                <div id="stl-viewer" class="card-img" style="cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <span id="loading-text" style="color: var(--text-secondary); font-size: 0.9rem;">Loading Models...</span>
-                </div>
+                <div id="stl-viewer" class="card-img viewer-container">
+                    <div id="model-label" class="model-label">Loading Models...</div>
+                    <button id="switch-btn" class="model-switch-btn" style="display: none;">Next Part ↻</button>
+                    </div>
                 <div class="card-content">
                     <h3 class="card-title">IRIS Diagnostic Cassette</h3>
                     <p style="font-size: 0.9rem; color: var(--text-secondary);">A dual-lane lateral flow assay cassette designed for NATO deployed forces to simultaneously detect tropical (Malaria, Dengue) and respiratory pathogens from a single encounter.</p>
-                    <p style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.5rem; font-style: italic;">Click the 3D model above to switch components! ↻</p>
                     <div class="tag-container">
                         <span class="tag">3D Modeling</span>
                         <span class="tag">Prototyping</span>
@@ -393,7 +429,6 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script>
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -403,7 +438,6 @@
             });
         });
 
-        // 3D Model Viewer Logic for Click-to-Switch
         window.onload = function() {
             const container = document.getElementById('stl-viewer');
             const scene = new THREE.Scene();
@@ -415,7 +449,7 @@
 
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.autoRotate = false; // We use custom rotation
+            controls.autoRotate = false; 
             controls.enableZoom = false;
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -437,20 +471,20 @@
                 roughness: 0.4 
             });
 
-            // Added all four files back into the array
-            const files = [
-                'top_shell.stl',
-                'dual-well-lfa-true%20through.stl',
-                'lfa_bed.stl',
-                'base_shell.stl'
+            // Dictionary mapping file names to human-readable labels
+            const parts = [
+                { file: 'top_shell.stl', name: 'Part 1/4: Top Shell' },
+                { file: 'lfa_bed.stl', name: 'Part 2/4: LFA Bed' },
+                { file: 'dual-well-lfa-true%20through.stl', name: 'Part 3/4: Dual Well LFA' },
+                { file: 'base_shell.stl', name: 'Part 4/4: Base Shell' }
             ];
 
             let loadedMeshes = [];
             let currentMeshIndex = 0;
 
-            const loadSTL = (url) => {
+            const loadSTL = (partData) => {
                 return new Promise((resolve, reject) => {
-                    loader.load(url, resolve, undefined, reject);
+                    loader.load(partData.file, resolve, undefined, reject);
                 });
             };
 
@@ -460,11 +494,10 @@
                 camera.position.z = size * 1.3;
             }
 
-            Promise.all(files.map(loadSTL)).then(geometries => {
-                document.getElementById('loading-text').style.display = 'none';
+            Promise.all(parts.map(loadSTL)).then(geometries => {
                 
                 geometries.forEach(geometry => {
-                    // Center each piece individually so they spin perfectly on their own axis
+                    // Center each piece individually
                     geometry.computeBoundingBox();
                     const center = new THREE.Vector3();
                     geometry.boundingBox.getCenter(center);
@@ -474,32 +507,38 @@
                     loadedMeshes.push(mesh);
                 });
 
-                // Display the first model to start
+                // Display the first model and update the UI
                 if (loadedMeshes.length > 0) {
                     pivot.add(loadedMeshes[0]);
                     adjustCameraForGeometry(geometries[0]);
+                    
+                    document.getElementById('model-label').innerText = parts[0].name;
+                    document.getElementById('switch-btn').style.display = 'block'; // Reveal the button
                 }
 
             }).catch(error => {
                 console.error(error);
-                document.getElementById('loading-text').innerText = 'Error loading 3D models.';
+                document.getElementById('model-label').innerText = 'Error loading models.';
+                document.getElementById('model-label').style.color = '#ef4444';
             });
 
-            // Click event to swap models
-            container.addEventListener('click', () => {
+            // Dedicated button listener for switching parts
+            document.getElementById('switch-btn').addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevents OrbitControls from acting weirdly
                 if (loadedMeshes.length === 0) return;
 
                 // Remove the current model
                 pivot.remove(loadedMeshes[currentMeshIndex]);
 
-                // Move to the next model in the array (looping back to 0 at the end)
+                // Cycle to next model
                 currentMeshIndex = (currentMeshIndex + 1) % loadedMeshes.length;
 
-                // Add the new model and adjust camera
+                // Add new model, update text label, and adjust camera
                 pivot.add(loadedMeshes[currentMeshIndex]);
+                document.getElementById('model-label').innerText = parts[currentMeshIndex].name;
                 adjustCameraForGeometry(loadedMeshes[currentMeshIndex].geometry);
                 
-                // Reset rotation so it starts spinning from a flat perspective
+                // Reset rotation
                 pivot.rotation.set(0,0,0);
             });
 
