@@ -336,13 +336,13 @@
         <div class="grid-container">
             
             <div class="card">
-                <div id="stl-viewer" class="card-img" style="cursor: grab; display: flex; align-items: center; justify-content: center;">
-                    <span id="loading-text" style="color: var(--text-secondary); font-size: 0.9rem;">Loading Assembly...</span>
+                <div id="stl-viewer" class="card-img" style="cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <span id="loading-text" style="color: var(--text-secondary); font-size: 0.9rem;">Loading Models...</span>
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">IRIS Diagnostic Cassette</h3>
                     <p style="font-size: 0.9rem; color: var(--text-secondary);">A dual-lane lateral flow assay cassette designed for NATO deployed forces to simultaneously detect tropical (Malaria, Dengue) and respiratory pathogens from a single encounter.</p>
-                    <p style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.5rem; font-style: italic;">Interact with the 3D assembly above! ↻</p>
+                    <p style="font-size: 0.8rem; color: var(--accent-color); margin-top: 0.5rem; font-style: italic;">Click the 3D model above to switch components! ↻</p>
                     <div class="tag-container">
                         <span class="tag">3D Modeling</span>
                         <span class="tag">Prototyping</span>
@@ -403,24 +403,21 @@
             });
         });
 
-        // 3D Model Viewer Logic for Multi-Part Assembly
+        // 3D Model Viewer Logic for Click-to-Switch
         window.onload = function() {
             const container = document.getElementById('stl-viewer');
             const scene = new THREE.Scene();
             
-            // Set camera and renderer
             const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             container.appendChild(renderer.domElement);
 
-            // Add orbital controls
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.autoRotate = false; // Disabled because we are manually spinning diagonally
+            controls.autoRotate = false; // We use custom rotation
             controls.enableZoom = false;
 
-            // Lighting setup
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -430,75 +427,92 @@
             backLight.position.set(-1, -1, -1).normalize();
             scene.add(backLight);
 
-            // Grouping structure for proper rotation
-            const pivot = new THREE.Group(); // The point that spins
+            const pivot = new THREE.Group(); 
             scene.add(pivot);
-            const wrapper = new THREE.Group(); // Holds all the parts
-            pivot.add(wrapper);
 
             const loader = new THREE.STLLoader();
             const material = new THREE.MeshStandardMaterial({ 
-                color: 0xFBFAF4, // Paper White
+                color: 0xFBFAF4, 
                 metalness: 0.3, 
                 roughness: 0.4 
             });
 
-            // UPDATED: Only load the three requested shell components
+            // Added all four files back into the array
             const files = [
-                'base_shell.stl',
+                'top_shell.stl',
+                'dual-well-lfa-true%20through.stl',
                 'lfa_bed.stl',
-                'top_shell.stl'
+                'base_shell.stl'
             ];
 
-            // Load STLs as Promises to assemble them simultaneously
+            let loadedMeshes = [];
+            let currentMeshIndex = 0;
+
             const loadSTL = (url) => {
                 return new Promise((resolve, reject) => {
                     loader.load(url, resolve, undefined, reject);
                 });
             };
 
+            function adjustCameraForGeometry(geometry) {
+                geometry.computeBoundingBox();
+                const size = geometry.boundingBox.getSize(new THREE.Vector3()).length();
+                camera.position.z = size * 1.3;
+            }
+
             Promise.all(files.map(loadSTL)).then(geometries => {
                 document.getElementById('loading-text').style.display = 'none';
                 
-                // Add each part to the assembly wrapper
                 geometries.forEach(geometry => {
+                    // Center each piece individually so they spin perfectly on their own axis
+                    geometry.computeBoundingBox();
+                    const center = new THREE.Vector3();
+                    geometry.boundingBox.getCenter(center);
+                    geometry.translate(-center.x, -center.y, -center.z);
+
                     const mesh = new THREE.Mesh(geometry, material);
-                    wrapper.add(mesh);
+                    loadedMeshes.push(mesh);
                 });
 
-                // Compute the bounding box of the ENTIRE assembly
-                const box = new THREE.Box3().setFromObject(wrapper);
-                const center = box.getCenter(new THREE.Vector3());
-                
-                // Shift the wrapper so its true center rests perfectly on the pivot point
-                wrapper.position.x = -center.x;
-                wrapper.position.y = -center.y;
-                wrapper.position.z = -center.z;
+                // Display the first model to start
+                if (loadedMeshes.length > 0) {
+                    pivot.add(loadedMeshes[0]);
+                    adjustCameraForGeometry(geometries[0]);
+                }
 
-                // Scale the camera back so the whole assembly fits in the window nicely
-                const size = box.getSize(new THREE.Vector3()).length();
-                camera.position.z = size * 1.3; 
             }).catch(error => {
                 console.error(error);
-                document.getElementById('loading-text').innerText = 'Error loading assembly.';
+                document.getElementById('loading-text').innerText = 'Error loading 3D models.';
             });
 
-            // Diagonal Vector (X and Y axis combined)
+            // Click event to swap models
+            container.addEventListener('click', () => {
+                if (loadedMeshes.length === 0) return;
+
+                // Remove the current model
+                pivot.remove(loadedMeshes[currentMeshIndex]);
+
+                // Move to the next model in the array (looping back to 0 at the end)
+                currentMeshIndex = (currentMeshIndex + 1) % loadedMeshes.length;
+
+                // Add the new model and adjust camera
+                pivot.add(loadedMeshes[currentMeshIndex]);
+                adjustCameraForGeometry(loadedMeshes[currentMeshIndex].geometry);
+                
+                // Reset rotation so it starts spinning from a flat perspective
+                pivot.rotation.set(0,0,0);
+            });
+
             const diagonalAxis = new THREE.Vector3(1, 1, 0).normalize();
 
-            // Animation Loop
             function animate() {
                 requestAnimationFrame(animate);
                 controls.update();
-                
-                // Spin the pivot point along the diagonal axis
                 pivot.rotateOnAxis(diagonalAxis, 0.008); 
-                
                 renderer.render(scene, camera);
             }
             animate();
             
-            // Handle window resize
             window.addEventListener('resize', () => {
                 camera.aspect = container.clientWidth / container.clientHeight;
                 camera.updateProjectionMatrix();
