@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kavinraj S R | Portfolio</title>
+  //fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --card: #1a1a24;
+      --border: #2a2a3a;
+      --purple: #a78bfa;
+      --teal: #2dd4bf;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,10,15,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem;
+    }
+    nav .logo { font-family: 'Fira Code', monospace; color: var(--purple); font-weight: 600; font-size: 1.1rem; }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    nav ul a:hover { color: var(--purple); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 2rem;
+      background: radial-gradient(ellipse at 50% 40%, rgba(167,139,250,0.08) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-block; background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.3);
+      color: var(--purple); padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.8rem;
+      font-family: 'Fira Code', monospace; margin-bottom: 1.5rem;
+    }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+    .hero h1 span { background: linear-gradient(135deg, var(--purple), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--teal)); color: #0a0a0f;
+      padding: 0.75rem 2rem; border-radius: 8px; font-weight: 700; text-decoration: none;
+      transition: opacity 0.2s; font-size: 0.95rem;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-outline {
+      border: 1px solid var(--border); color: var(--text); padding: 0.75rem 2rem;
+      border-radius: 8px; text-decoration: none; font-size: 0.95rem; transition: border-color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--purple); }
+    .stats { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; color: var(--purple); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* SECTIONS */
+    section { padding: 5rem 2rem; max-width: 1000px; margin: 0 auto; }
+    .section-title {
+      font-size: 1.8rem; font-weight: 700; margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-title span { color: var(--purple); font-family: 'Fira Code', monospace; font-size: 1rem; margin-right: 0.5rem; }
+
+    /* EXPERIENCE */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(var(--purple), var(--teal)); border-radius: 2px; }
+    .timeline-item { position: relative; margin-bottom: 2.5rem; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -2.4rem; top: 0.4rem;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--purple); border: 2px solid var(--bg);
+    }
+    .timeline-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; }
+    .timeline-card:hover { border-color: var(--purple); }
+    .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .timeline-role { font-weight: 700; font-size: 1rem; color: var(--text); }
+    .timeline-company { color: var(--purple); font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; }
+    .timeline-date { color: var(--muted); font-size: 0.8rem; font-family: 'Fira Code', monospace; }
+    .timeline-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+    .timeline-desc li { margin-bottom: 0.3rem; }
+
+    /* EDUCATION */
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .edu-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; position: relative; overflow: hidden; }
+    .edu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--purple), var(--teal)); }
+    .edu-degree { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+    .edu-school { color: var(--purple); font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .edu-date { color: var(--muted); font-size: 0.8rem; font-family: 'Fira Code', monospace; }
+    .edu-gpa { margin-top: 0.5rem; font-size: 0.85rem; color: var(--teal); }
+
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .skill-category { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .skill-category h3 { font-size: 0.9rem; font-weight: 600; color: var(--purple); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.2); color: var(--muted); padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.78rem; font-family: 'Fira Code', monospace; }
+    .tag.teal { background: rgba(45,212,191,0.1); border-color: rgba(45,212,191,0.2); }
+
+    /* PROJECTS / RESEARCH */
+    .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; transition: border-color 0.2s; }
+    .project-card:hover { border-color: var(--teal); }
+    .project-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .project-meta { color: var(--teal); font-size: 0.8rem; font-family: 'Fira Code', monospace; margin-bottom: 0.5rem; }
+    .project-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+    .project-link { display: inline-block; margin-top: 0.8rem; color: var(--purple); font-size: 0.85rem; text-decoration: none; }
+    .project-link:hover { text-decoration: underline; }
+
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .contact-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; text-align: center; text-decoration: none; color: var(--text); transition: border-color 0.2s, transform 0.2s; }
+    .contact-card:hover { border-color: var(--purple); transform: translateY(-3px); }
+    .contact-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .contact-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .contact-value { font-size: 0.85rem; color: var(--purple); margin-top: 0.2rem; word-break: break-all; }
+
+    /* FOOTER */
+    footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+
+    /* ANIMATIONS */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      nav ul { display: none; }
+      .stats { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">&lt;kavinraj /&gt;</div>
+  <ul>
+    ><a href="#experience">Experience</a></li>
+    ><a href="#education">Education</a></li>
+    ><a href="#skills">Skills</a></li>
+    ><a href="#research">Research</a></li>
+    ><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-badge">🎓 M.S. Engineering @ Johns Hopkins University</div>
+    <h1>Hi, I'm <span>Kavinraj S R</span></h1>
+    <p>ML Engineer & Systems Developer blending AI/ML, hardware prototyping, and full-stack engineering to build intelligent, impactful solutions.</p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn-primary">Get In Touch</a>
+      <a href="#experience" class="btn-outline">View Experience</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">3.7</div><div class="stat-label">GPA</div></div>
+      <div class="stat"><div class="stat-num">98%</div><div class="stat-label">ML Model Accuracy</div></div>
+      <div class="stat"><div class="stat-num">1K+</div><div class="stat-label">Transactions/Month</div></div>
+      <div class="stat"><div class="stat-num">20+</div><div class="stat-label">API Partners</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <h2 class="section-title fade-in"><span>02.</span> Experience</h2>
+  <div class="timeline">
+
+    <div class="timeline-item fade-in">
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <div>
+            <div class="timeline-role">Research
