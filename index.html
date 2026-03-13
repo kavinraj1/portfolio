@@ -6,12 +6,17 @@
     <title>Kavinraj S. Rangaraj | Portfolio</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --accent-color: #38bdf8;
-            --accent-hover: #0284c7;
+            /* Perplexity Brand Colors */
+            --bg-color: #091717; /* Offblack */
+            --text-primary: #FBFAF4; /* Paper White */
+            --text-secondary: rgba(251, 250, 244, 0.7);
+            --accent-color: #20808D; /* True Turquoise */
+            --accent-hover: #2ab1c2; /* Lighter Turquoise */
+            
+            /* Liquid Glass Variables */
+            --glass-bg: rgba(251, 250, 244, 0.04); 
+            --glass-border: rgba(251, 250, 244, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         * {
@@ -25,18 +30,26 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.6;
+            /* Subtle ambient background glow to make the glass effect pop */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(32, 128, 141, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(32, 128, 141, 0.05), transparent 25%);
+            background-attachment: fixed;
         }
 
         header {
-            padding: 2rem 5%;
+            padding: 1.5rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgba(15, 23, 42, 0.9);
+            /* Liquid Glass Header */
+            background-color: rgba(9, 23, 23, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid var(--surface-color);
         }
 
         nav a {
@@ -60,7 +73,7 @@
         h1 {
             font-size: 3.5rem;
             margin-bottom: 1rem;
-            background: linear-gradient(to right, var(--accent-color), #818cf8);
+            background: linear-gradient(to right, var(--accent-color), #6dd5e2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -90,39 +103,46 @@
             justify-content: center;
         }
 
-        /* Profile Picture Zoom Wrapper */
+        /* Profile Picture Zoom Wrapper with Liquid Glass styling */
         .profile-pic-wrapper {
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            border: 4px solid var(--accent-color);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            border: 1px solid rgba(251, 250, 244, 0.15);
+            box-shadow: 0 0 40px rgba(32, 128, 141, 0.2);
             overflow: hidden; 
+            /* Inner glass effect behind the image if it has transparency */
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
         }
 
-        /* Image is un-zoomed and positioned to show the top half */
+        /* Image is zoomed in and positioned on the face */
         .profile-pic-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: top center; /* Focuses on the top half of the image */
+            transform-origin: center 40%; 
+            transform: scale(1.4); 
         }
 
         .btn {
             display: inline-block;
             padding: 0.8rem 1.5rem;
             background-color: var(--accent-color);
-            color: #000;
+            color: var(--text-primary);
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 8px;
+            font-weight: 600;
             margin-top: 1.5rem;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(251, 250, 244, 0.1);
+            box-shadow: 0 4px 15px rgba(32, 128, 141, 0.3);
         }
 
         .btn:hover {
             background-color: var(--accent-hover);
-            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(32, 128, 141, 0.4);
         }
 
         .grid-container {
@@ -131,24 +151,30 @@
             gap: 2rem;
         }
 
+        /* Liquid Glass Cards */
         .card {
-            background-color: var(--surface-color);
-            border-radius: 10px;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
         }
 
         .card:hover {
             transform: translateY(-5px);
+            background-color: rgba(251, 250, 244, 0.06);
         }
 
         /* PLACEHOLDER: Project Images */
         .card-img {
             width: 100%;
             height: 200px;
-            background-color: #334155; /* Fallback color */
+            background-color: rgba(9, 23, 23, 0.8); /* Fallback color */
             object-fit: cover;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .card-content {
@@ -169,20 +195,25 @@
         }
 
         .tag {
-            background-color: rgba(56, 189, 248, 0.1);
-            color: var(--accent-color);
-            padding: 0.2rem 0.6rem;
+            background-color: rgba(32, 128, 141, 0.15);
+            color: var(--text-primary);
+            padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-size: 0.85rem;
-            border: 1px solid var(--accent-color);
+            border: 1px solid rgba(32, 128, 141, 0.3);
         }
 
+        /* Liquid Glass Experience Items */
         .experience-item {
             margin-bottom: 2rem;
-            background-color: var(--surface-color);
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
             border-left: 4px solid var(--accent-color);
+            box-shadow: var(--glass-shadow);
         }
 
         .experience-header {
@@ -195,7 +226,8 @@
         footer {
             text-align: center;
             padding: 2rem;
-            background-color: var(--surface-color);
+            background-color: rgba(9, 23, 23, 0.8);
+            border-top: 1px solid var(--glass-border);
             margin-top: 4rem;
         }
 
