@@ -90,14 +90,23 @@
             justify-content: center;
         }
 
-        /* PLACEHOLDER: Profile Picture */
-        .hero-image img {
+        /* Profile Picture Zoom Wrapper */
+        .profile-pic-wrapper {
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            object-fit: cover;
             border: 4px solid var(--accent-color);
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            overflow: hidden; 
+        }
+
+        /* The image zooms in inside the window */
+        .profile-pic-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: center bottom; /* Anchors the zoom to where you are standing */
+            transform: scale(2.8); /* You can increase or decrease this number to adjust the zoom */
         }
 
         .btn {
@@ -227,7 +236,9 @@
             <a href="mailto:kavinrajsr2004@gmail.com" class="btn">Get in Touch</a>
         </div>
         <div class="hero-image">
-            <img src="IMG_1773 (1) (1).jpg" alt="Kavinraj S. Rangaraj">
+            <div class="profile-pic-wrapper">
+                <img src="IMG_1773 (1) (1).jpg" alt="Kavinraj S. Rangaraj">
+            </div>
         </div>
     </section>
 
