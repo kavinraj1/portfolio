@@ -443,10 +443,9 @@
                 roughness: 0.4 
             });
 
-            // List of all parts uploaded to your GitHub
+            // UPDATED: Only load the three requested shell components
             const files = [
                 'base_shell.stl',
-                'dual-well-lfa-true%20through.stl',
                 'lfa_bed.stl',
                 'top_shell.stl'
             ];
@@ -476,9 +475,9 @@
                 wrapper.position.y = -center.y;
                 wrapper.position.z = -center.z;
 
-                // Scale the camera back so the whole assembly fits in the window
+                // Scale the camera back so the whole assembly fits in the window nicely
                 const size = box.getSize(new THREE.Vector3()).length();
-                camera.position.z = size * 1.5;
+                camera.position.z = size * 1.3; 
             }).catch(error => {
                 console.error(error);
                 document.getElementById('loading-text').innerText = 'Error loading assembly.';
